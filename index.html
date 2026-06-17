@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Agent Flow Visualizer · Lief</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ─── Top Bar ─────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="logo">⚡ Agent Flow</span>
+    <span class="logo-sub">AI Workflow Visualizer</span>
+  </div>
+  <div class="topbar-center">
+    <button class="btn btn-run" id="btnRun" title="Simulate execution">
+      <svg width="14" height="14" viewBox="0 0 16 16"><polygon points="3,1 15,8 3,15" fill="currentColor"/></svg>
+      Run
+    </button>
+    <button class="btn btn-pause hidden" id="btnPause" title="Pause">
+      <svg width="14" height="14" viewBox="0 0 16 16"><rect x="3" y="1" width="4" height="14" fill="currentColor"/><rect x="9" y="1" width="4" height="14" fill="currentColor"/></svg>
+      Pause
+    </button>
+    <button class="btn btn-reset" id="btnReset" title="Reset canvas">
+      <svg width="14" height="14" viewBox="0 0 16 16"><path d="M2 8a6 6 0 1 1 1.5 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><polyline points="0,10 2,8 4,10" fill="currentColor"/></svg>
+      Reset
+    </button>
+    <button class="btn btn-clear" id="btnClear" title="Clear canvas">
+      <svg width="14" height="14" viewBox="0 0 16 16"><path d="M2 4h12M5 4V2h6v2M6 7v6M10 7v6M3 4l1 10h8l1-10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Clear
+    </button>
+    <div class="speed-control">
+      <label for="speedSlider">Speed</label>
+      <input type="range" id="speedSlider" min="0.5" max="3" step="0.25" value="1" />
+    </div>
+  </div>
+  <div class="topbar-right">
+    <a class="portfolio-link" href="https://lief.liaolief.com" target="_blank">← Portfolio</a>
+  </div>
+</header>
+
+<!-- ─── Main Layout ──────────────────────────────────────────────────────── -->
+<div class="app">
+
+  <!-- Node Palette -->
+  <aside class="palette">
+    <div class="palette-title">Node Types</div>
+
+    <div class="palette-item" data-type="input" draggable="true" title="Drag to canvas">
+      <div class="palette-icon input-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M3 12h18M14 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="palette-label">
+        <span class="palette-name">Input</span>
+        <span class="palette-desc">Entry point</span>
+      </div>
+    </div>
+
+    <div class="palette-item" data-type="llm" draggable="true" title="Drag to canvas">
+      <div class="palette-icon llm-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="palette-label">
+        <span class="palette-name">LLM</span>
+        <span class="palette-desc">Language model</span>
+      </div>
+    </div>
+
+    <div class="palette-item" data-type="tool" draggable="true" title="Drag to canvas">
+      <div class="palette-icon tool-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.77 3.77z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="palette-label">
+        <span class="palette-name">Tool</span>
+        <span class="palette-desc">External action</span>
+      </div>
+    </div>
+
+    <div class="palette-item" data-type="condition" draggable="true" title="Drag to canvas">
+      <div class="palette-icon condition-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l10 18H2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+      </div>
+      <div class="palette-label">
+        <span class="palette-name">Condition</span>
+        <span class="palette-desc">Branch logic</span>
+      </div>
+    </div>
+
+    <div class="palette-item" data-type="output" draggable="true" title="Drag to canvas">
+      <div class="palette-icon output-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="palette-label">
+        <span class="palette-name">Output</span>
+        <span class="palette-desc">Final result</span>
+      </div>
+    </div>
+
+    <div class="palette-hint">
+      <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Drag nodes onto canvas, then connect them by dragging from a port
+    </div>
+  </aside>
+
+  <!-- Canvas -->
+  <main class="canvas-wrap">
+    <svg id="canvas" class="canvas">
+      <!-- Arrow marker definition -->
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="var(--edge-color)" />
+        </marker>
+        <marker id="arrowhead-active" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="var(--edge-active-color)" />
+        </marker>
+      </defs>
+      <g id="edgesGroup"></g>
+      <g id="nodesGroup"></g>
+      <!-- Temp edge while drawing -->
+      <path id="tempEdge" class="temp-edge hidden" marker-end="url(#arrowhead)"></path>
+    </svg>
+    <div class="canvas-hint" id="canvasHint">
+      ← Drag node types from the palette to begin
+    </div>
+    <!-- Particle canvas overlay -->
+    <canvas id="particleCanvas" class="particle-canvas"></canvas>
+  </main>
+
+  <!-- Inspector panel -->
+  <aside class="inspector" id="inspector">
+    <div class="inspector-title">Properties</div>
+    <div class="inspector-empty" id="inspectorEmpty">Select a node to edit its properties</div>
+    <div class="inspector-form hidden" id="inspectorForm">
+      <div class="form-group">
+        <label>Label</label>
+        <input type="text" id="propLabel" placeholder="Node label" />
+      </div>
+      <div class="form-group" id="propModelGroup">
+        <label>Model</label>
+        <select id="propModel">
+          <option value="gpt-4o">GPT-4o</option>
+          <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+          <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+          <option value="llama-3.1-70b">Llama 3.1 70B</option>
+        </select>
+      </div>
+      <div class="form-group" id="propToolGroup">
+        <label>Tool name</label>
+        <input type="text" id="propTool" placeholder="e.g. web_search, calculator" />
+      </div>
+      <div class="form-group" id="propCondGroup">
+        <label>Condition</label>
+        <input type="text" id="propCond" placeholder="e.g. result.score > 0.8" />
+      </div>
+      <div class="form-group" id="propNoteGroup">
+        <label>Description</label>
+        <textarea id="propNote" rows="3" placeholder="Optional description..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-apply" id="btnApply">Apply</button>
+        <button class="btn btn-delete" id="btnDelete">Delete</button>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- Execution log panel -->
+<div class="log-panel" id="logPanel">
+  <div class="log-header">
+    <span>Execution Log</span>
+    <button class="log-toggle" id="logToggle" title="Collapse">▼</button>
+  </div>
+  <div class="log-body" id="logBody"></div>
+</div>
+
+<!-- Mobile Inspector Overlay -->
+<div id="mobileInspector">
+  <div class="mob-insp-handle"></div>
+  <div class="mob-insp-header">
+    <span id="mobInspBadge" class="mob-insp-badge"></span>
+    <button class="mob-insp-close" id="mobInspClose">×</button>
+  </div>
+  <div id="mobInspName" class="mob-insp-name"></div>
+  <div class="mob-insp-grid" id="mobInspGrid"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
