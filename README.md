@@ -141,6 +141,24 @@ All colors are CSS custom properties in `:root`. Swap `--node-*` and `--bg-*` to
 
 ---
 
+## Examples
+
+Ready-to-study workflow blueprints in `examples/`:
+
+| File | Pipeline |
+|------|----------|
+| `rag-pipeline.json` | RAG Q&A with query rewriting, relevance filtering, and fallback |
+| `react-agent.json` | ReAct (Reasoning + Acting) loop with tool dispatch |
+| `multi-agent-research.json` | Parallel research agents with critic + synthesis |
+
+---
+
+## Docs
+
+- [`docs/architecture.md`](docs/architecture.md) — deep dive: rendering layers, state model, Bézier routing, simulation engine, particle system
+
+---
+
 ## About
 
 Built by **[Lief](https://lief.liaolief.com)** — AI Agent Engineer.
