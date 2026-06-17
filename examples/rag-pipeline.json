@@ -1,0 +1,85 @@
+{
+  "name": "RAG Q&A Pipeline",
+  "description": "Retrieval-Augmented Generation pipeline with query rewriting and relevance check",
+  "nodes": [
+    {
+      "id": "n1",
+      "type": "input",
+      "label": "User Query",
+      "x": 60,
+      "y": 200,
+      "notes": "Entry point — raw user question"
+    },
+    {
+      "id": "n2",
+      "type": "llm",
+      "label": "Query Rewriter",
+      "model": "gpt-4o-mini",
+      "x": 240,
+      "y": 200,
+      "notes": "Expand query into 3 search variants for better retrieval coverage"
+    },
+    {
+      "id": "n3",
+      "type": "tool",
+      "label": "Vector Search",
+      "tool": "qdrant_search",
+      "x": 420,
+      "y": 200,
+      "notes": "Search Qdrant collection with all 3 query variants, top-10 each"
+    },
+    {
+      "id": "n4",
+      "type": "llm",
+      "label": "Relevance Judge",
+      "model": "gpt-4o-mini",
+      "x": 600,
+      "y": 200,
+      "notes": "Filter retrieved chunks — keep only score > 0.75"
+    },
+    {
+      "id": "n5",
+      "type": "condition",
+      "label": "Has Context?",
+      "x": 780,
+      "y": 200,
+      "notes": "Yes if ≥1 chunk passes relevance. No if all filtered out."
+    },
+    {
+      "id": "n6",
+      "type": "llm",
+      "label": "Answer Generator",
+      "model": "gpt-4o",
+      "x": 960,
+      "y": 120,
+      "notes": "Generate answer grounded in retrieved context. Cite sources."
+    },
+    {
+      "id": "n7",
+      "type": "llm",
+      "label": "Fallback Reply",
+      "model": "gpt-4o-mini",
+      "x": 960,
+      "y": 280,
+      "notes": "Graceful fallback: 'I don't have enough information to answer that.'"
+    },
+    {
+      "id": "n8",
+      "type": "output",
+      "label": "Response",
+      "x": 1140,
+      "y": 200,
+      "notes": "Final answer to user"
+    }
+  ],
+  "edges": [
+    { "from": "n1", "to": "n2" },
+    { "from": "n2", "to": "n3" },
+    { "from": "n3", "to": "n4" },
+    { "from": "n4", "to": "n5" },
+    { "from": "n5", "fromPort": "yes", "to": "n6" },
+    { "from": "n5", "fromPort": "no", "to": "n7" },
+    { "from": "n6", "to": "n8" },
+    { "from": "n7", "to": "n8" }
+  ]
+}
