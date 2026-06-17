@@ -1,0 +1,118 @@
+{
+  "name": "Multi-Agent Research System",
+  "description": "Parallel research agents + synthesis: decompose query, fan out to specialized agents, synthesize",
+  "nodes": [
+    {
+      "id": "n1",
+      "type": "input",
+      "label": "Research Query",
+      "x": 60,
+      "y": 300,
+      "notes": "Complex research question"
+    },
+    {
+      "id": "n2",
+      "type": "llm",
+      "label": "Decomposer",
+      "model": "gpt-4o",
+      "x": 240,
+      "y": 300,
+      "notes": "Break query into 3-5 sub-questions. Assign each to a specialized agent."
+    },
+    {
+      "id": "n3",
+      "type": "llm",
+      "label": "Web Research Agent",
+      "model": "gpt-4o",
+      "x": 460,
+      "y": 120,
+      "notes": "Search web for recent information (Exa/Tavily)"
+    },
+    {
+      "id": "n4",
+      "type": "llm",
+      "label": "Academic Agent",
+      "model": "gpt-4o",
+      "x": 460,
+      "y": 240,
+      "notes": "Search arXiv + Semantic Scholar for papers"
+    },
+    {
+      "id": "n5",
+      "type": "llm",
+      "label": "Data Agent",
+      "model": "gpt-4o-mini",
+      "x": 460,
+      "y": 360,
+      "notes": "Pull structured data, statistics, benchmarks"
+    },
+    {
+      "id": "n6",
+      "type": "llm",
+      "label": "Code Agent",
+      "model": "claude-sonnet-4-6",
+      "x": 460,
+      "y": 480,
+      "notes": "Find reference implementations, run code examples"
+    },
+    {
+      "id": "n7",
+      "type": "llm",
+      "label": "Synthesizer",
+      "model": "gpt-4o",
+      "x": 700,
+      "y": 300,
+      "notes": "Merge all agent findings. Resolve conflicts. Build coherent answer with citations."
+    },
+    {
+      "id": "n8",
+      "type": "llm",
+      "label": "Critic",
+      "model": "gpt-4o",
+      "x": 880,
+      "y": 300,
+      "notes": "Adversarial review: fact-check claims, identify gaps, flag low-confidence sections"
+    },
+    {
+      "id": "n9",
+      "type": "condition",
+      "label": "Quality OK?",
+      "x": 1060,
+      "y": 300,
+      "notes": "Yes if critic confidence > 0.8. No if major gaps found."
+    },
+    {
+      "id": "n10",
+      "type": "output",
+      "label": "Research Report",
+      "x": 1240,
+      "y": 200,
+      "notes": "Final comprehensive research report with citations"
+    },
+    {
+      "id": "n11",
+      "type": "tool",
+      "label": "Gap Filler",
+      "tool": "targeted_search",
+      "x": 1240,
+      "y": 400,
+      "notes": "Fill specific gaps identified by critic, loop back to synthesizer"
+    }
+  ],
+  "edges": [
+    { "from": "n1", "to": "n2" },
+    { "from": "n2", "to": "n3" },
+    { "from": "n2", "to": "n4" },
+    { "from": "n2", "to": "n5" },
+    { "from": "n2", "to": "n6" },
+    { "from": "n3", "to": "n7" },
+    { "from": "n4", "to": "n7" },
+    { "from": "n5", "to": "n7" },
+    { "from": "n6", "to": "n7" },
+    { "from": "n7", "to": "n8" },
+    { "from": "n8", "to": "n9" },
+    { "from": "n9", "fromPort": "yes", "to": "n10" },
+    { "from": "n9", "fromPort": "no", "to": "n11" },
+    { "from": "n11", "to": "n7" }
+  ]
+}
