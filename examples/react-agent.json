@@ -1,0 +1,65 @@
+{
+  "name": "ReAct Agent Loop",
+  "description": "Reasoning + Acting loop: the LLM decides which tool to call, calls it, observes, repeats until done",
+  "nodes": [
+    {
+      "id": "n1",
+      "type": "input",
+      "label": "Task Input",
+      "x": 60,
+      "y": 200,
+      "notes": "User task or objective"
+    },
+    {
+      "id": "n2",
+      "type": "llm",
+      "label": "Reasoner",
+      "model": "claude-sonnet-4-6",
+      "x": 240,
+      "y": 200,
+      "notes": "Think: What's the next step? Which tool should I use? Output: Thought + Action"
+    },
+    {
+      "id": "n3",
+      "type": "condition",
+      "label": "Done?",
+      "x": 420,
+      "y": 200,
+      "notes": "Yes if LLM outputs Final Answer. No if it outputs a tool call."
+    },
+    {
+      "id": "n4",
+      "type": "tool",
+      "label": "Tool Dispatcher",
+      "tool": "multi_tool",
+      "x": 600,
+      "y": 280,
+      "notes": "Route to: web_search / code_exec / file_read / calculator based on LLM action"
+    },
+    {
+      "id": "n5",
+      "type": "llm",
+      "label": "Observer",
+      "model": "claude-haiku-4-5",
+      "x": 780,
+      "y": 280,
+      "notes": "Format tool output as Observation for next reasoning step"
+    },
+    {
+      "id": "n6",
+      "type": "output",
+      "label": "Final Answer",
+      "x": 600,
+      "y": 120,
+      "notes": "Return when LLM outputs 'Final Answer:' prefix"
+    }
+  ],
+  "edges": [
+    { "from": "n1", "to": "n2" },
+    { "from": "n2", "to": "n3" },
+    { "from": "n3", "fromPort": "yes", "to": "n6" },
+    { "from": "n3", "fromPort": "no", "to": "n4" },
+    { "from": "n4", "to": "n5" },
+    { "from": "n5", "to": "n2" }
+  ]
+}
