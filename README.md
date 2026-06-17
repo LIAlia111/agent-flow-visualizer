@@ -142,7 +142,7 @@ All colors are CSS custom properties in `:root`. Swap `--node-*` and `--bg-*` to
 
 ## About
 
-Built by **[Lief (廖文东)](https://lief.liaolief.com)** — AI Agent Engineer.
+Built by **[Lief](https://lief.liaolief.com)** — AI Agent Engineer.
 
 Lief builds production AI Agent systems: a self-evolving personal AI (JARVIS), multi-agent orchestration pipelines, and AI-native SaaS products. This visualizer came out of the mental model he uses to design Agent graphs before they become code.
 
