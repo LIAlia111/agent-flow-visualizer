@@ -7,6 +7,7 @@
 ![WebTech](https://img.shields.io/badge/WebTech-SVG%20%2B%20Canvas-blue?style=flat-square)
 ![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-brightgreen?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)
 
 ---
 
