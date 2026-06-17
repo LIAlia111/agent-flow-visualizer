@@ -1,0 +1,30 @@
+{
+  "name": "agent-flow-visualizer",
+  "version": "1.0.0",
+  "description": "Interactive AI Agent workflow visualizer — zero dependencies, pure browser",
+  "scripts": {
+    "dev": "npx serve . --listen 3000",
+    "start": "npx serve . --listen 3000"
+  },
+  "keywords": [
+    "ai-agent",
+    "workflow",
+    "visualizer",
+    "langchain",
+    "langgraph",
+    "no-framework",
+    "vanilla-js",
+    "canvas",
+    "svg"
+  ],
+  "author": "Lief <lief.liaolief.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/LIAlia111/agent-flow-visualizer#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LIAlia111/agent-flow-visualizer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LIAlia111/agent-flow-visualizer/issues"
+  }
+}
